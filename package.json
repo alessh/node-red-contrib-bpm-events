@@ -1,7 +1,7 @@
 {
-    "name": "node-red-contrib-google-cloud",
+    "name": "node-red-contrib-bpm-events",
     "version": "0.0.1",
-    "description": "Node-RED nodes for Google Cloud Platform",
+    "description": "Node-RED nodes for BPM Events based on Google Cloud PubSub Platform",
     "dependencies": {
         "@google-cloud/pubsub": "latest"
     },
@@ -10,22 +10,23 @@
         "cloud",
         "pubsub",
         "publish",
-        "subscribe"
+        "subscribe",
+        "bpm"
     ],
     "node-red": {
         "nodes": {
-            "google-cloud-credentials": "credentials.js",
-            "google-cloud-pubsub": "pubsub.js"
+            "bpm-event-credential": "credentials.js",
+            "bpm-event": "pubsub.js"
         }
     },
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/GoogleCloudPlatform/node-red-contrib-google-cloud.git"
+        "url": "https://github.com/alessh/node-red-contrib-bpm-events.git"
     },
     "author": {
-        "name": "Cloud Partner Engineering",
-        "email": "cloud-partner-eng@google.com",
-        "url": "https://cloud.google.com/partners/"
+        "name": "Alessandro Holanda",
+        "email": "alessandro.holanda@hotmail.com",
+        "url": "https://github.com/alessh/"
     }
 }

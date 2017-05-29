@@ -193,7 +193,7 @@ module.exports = function(RED) {
 
         node.on("close", OnClose);
     }
-    RED.nodes.registerType("google-cloud-pubsub in", GoogleCloudPubSubInNode);
+    RED.nodes.registerType("bpm-event in", GoogleCloudPubSubInNode);
 
     function GoogleCloudPubSubOutNode(config) {
         RED.nodes.createNode(this, config);
@@ -279,5 +279,5 @@ module.exports = function(RED) {
 
         node.on("close", OnClose);
     }
-    RED.nodes.registerType("google-cloud-pubsub out", GoogleCloudPubSubOutNode);
+    RED.nodes.registerType("bpm-event out", GoogleCloudPubSubOutNode);
 }

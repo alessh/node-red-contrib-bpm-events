@@ -19,7 +19,7 @@ module.exports = function(RED) {
       RED.nodes.createNode(this, config);
       this.name = config.name;
   }
-  RED.nodes.registerType("google-cloud-credentials", GoogleCloudCredentialsNode, {
+  RED.nodes.registerType("bpm-event-credential", GoogleCloudCredentialsNode, {
       credentials: {
           name: {
               type: "text",

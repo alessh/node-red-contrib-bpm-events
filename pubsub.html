@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<script type="text/x-red" data-template-name="google-cloud-pubsub in">
+<script type="text/x-red" data-template-name="bpm-event in">
     <div class="form-row">
         <label for="node-input-account"><i class="fa fa-user"></i> Credentials</label>
         <input type="text" id="node-input-account">
@@ -23,7 +23,7 @@ limitations under the License.
         <label for="node-input-topic"><i class="fa fa-comment"></i> Topic</label>
         <input type="text" id="node-input-topic">
     </div>
-    <div class="form-row">
+    <!--<div class="form-row">
         <label for="node-input-subscription"><i class="fa fa-bars"></i> Subscription</label>
         <input type="text" id="node-input-subscription">
     </div>
@@ -42,14 +42,14 @@ limitations under the License.
     <div class="form-row">
         <label for="node-input-timeout"><i class="fa fa-hourglass-start"></i> Timeout</label>
         <input type="number" id="node-input-timeout" step="1" placeholder="HTTP request timeout in milliseconds...">
-    </div>
+    </div>-->
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="google-cloud-pubsub in">
+<script type="text/x-red" data-help-name="bpm-event in">
     <p>Connects to <a href="https://cloud.google.com/pubsub/docs/" target="_blank">Google Cloud Pub/Sub</a> and subscribes to a specific topic.</p>
     <p>Sends a message with the properties:</p>
     <ul>
@@ -69,10 +69,10 @@ limitations under the License.
 </script>
 
 <script type="text/javascript">
-RED.nodes.registerType("google-cloud-pubsub in", {
+RED.nodes.registerType("bpm-event in", {
     category: "input",
     defaults: {
-        account: { type: "google-cloud-credentials", required: true },
+        account: { type: "bpm-event-credential", required: true },
         topic: { required: true },
         subscription: { required: false },
         ackDeadlineSeconds: { required: false },
@@ -93,7 +93,7 @@ RED.nodes.registerType("google-cloud-pubsub in", {
 });
 </script>
 
-<script type="text/x-red" data-template-name="google-cloud-pubsub out">
+<script type="text/x-red" data-template-name="bpm-event out">
     <div class="form-row">
         <label for="node-input-account"><i class="fa fa-user"></i> Credentials</label>
         <input type="text" id="node-input-account">
@@ -108,7 +108,7 @@ RED.nodes.registerType("google-cloud-pubsub in", {
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="google-cloud-pubsub out">
+<script type="text/x-red" data-help-name="bpm-event out">
     <p>Connects to <a href="https://cloud.google.com/pubsub/docs/" target="_blank">Google Cloud Pub/Sub</a> and publishes messages to a specific topic.</p>
     <p>Receives a message with the properties:</p>
     <ul>
@@ -120,10 +120,10 @@ RED.nodes.registerType("google-cloud-pubsub in", {
 </script>
 
 <script type="text/javascript">
-RED.nodes.registerType("google-cloud-pubsub out", {
+RED.nodes.registerType("bpm-event out", {
     category: "output",
     defaults: {
-        account: { type: "google-cloud-credentials", required: true },
+        account: { type: "bpm-event-credential", required: true },
         topic: { required: true },
         name: { value: "", required: false }
     },

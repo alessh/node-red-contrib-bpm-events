@@ -1,5 +1,9 @@
-node-red-contrib-google-cloud **(ALPHA)**
+node-red-contrib-bpm-events
 =====================================
+
+This is a BPM (Business Process Management) event system based on Google Cloud Pubsub. 
+
+This project is based on a non official Google product [Node Red nodes for Google Cloud Platform](https://github.com/GoogleCloudPlatform/node-red-contrib-google-cloud).
 
 **_This is not an official Google product._**
 
