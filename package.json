@@ -3,7 +3,7 @@
     "version": "0.0.4",
     "description": "Node-RED nodes for BPM Events based on Google Cloud PubSub Platform",
     "dependencies": {
-        "@google-cloud/pubsub": "latest"
+        "@google-cloud/pubsub": "0.8.0"
     },
     "keywords": [
         "google",
