@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<script type="text/x-red" data-template-name="bpm-event in">
+<script type="text/x-red" data-template-name="bpm-task-event in">
     <div class="form-row">
         <label for="node-input-account"><i class="fa fa-user"></i> Credentials</label>
         <input type="text" id="node-input-account">
@@ -22,18 +22,20 @@ limitations under the License.
     <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-comment"></i> Event</label>
         <select id="node-input-topic">
-            <option value="TaskCreated">TaskCreated</option>
-            <option value="TaskCompleted">TaskCompleted</options>
+            <option value="TaskCreated">Created</option>
+            <option value="TaskCompleted">Completed</options>
+            <option value="TaskCanceled">Canceled</options>
+            <option value="TaskError">Error</options>
         </select>
     </div>
     <!--<div class="form-row">
         <label for="node-input-topic"><i class="fa fa-comment"></i> Topic</label>
         <input type="text" id="node-input-topic">
     </div>-->
-    <div class="form-row">
+    <!--<div class="form-row">
         <label for="node-input-subscription"><i class="fa fa-bars"></i> Subscription</label>
         <input type="text" id="node-input-subscription">
-    </div>
+    </div>-->
     <!--<div class="form-row">
         <label for="node-input-ackDeadlineSeconds"><i class="fa fa-hourglass-start"></i> Deadline</label>
         <input type="number" id="node-input-ackDeadlineSeconds" step="1" placeholder="Maximum time in seconds before redelivery...">
@@ -43,6 +45,13 @@ limitations under the License.
         <input type="text" id="node-input-encoding" placeholder="Payload encoding...">
     </div>
     <div class="form-row">
+        <label for="node-input-binary"><i class="fa fa-file-text-o"></i> String or Binary</label>
+        <select id="node-input-binary" style="width:170px">
+            <option value="binary">binary</option>
+            <option value="string">string</option>
+        </select>
+    </div>        
+    <div class="form-row">
         <label for="node-input-interval"><i class="fa fa-history"></i> Interval</label>
         <input type="number" id="node-input-interval" step="1" placeholder="Polling interval in milliseconds...">
     </div>
@@ -51,12 +60,16 @@ limitations under the License.
         <input type="number" id="node-input-timeout" step="1" placeholder="HTTP request timeout in milliseconds...">
     </div>-->
     <div class="form-row">
+        <label for="node-input-task"><i class="fa fa-tag"></i> Task ID</label>
+        <input type="text" id="node-input-task">
+    </div>
+    <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="bpm-event in">
+<script type="text/x-red" data-help-name="bpm-task-event in">
     <p>Connects to <a href="https://cloud.google.com/pubsub/docs/" target="_blank">Google Cloud Pub/Sub</a> and subscribes to a specific topic.</p>
     <p>Sends a message with the properties:</p>
     <ul>
@@ -76,31 +89,33 @@ limitations under the License.
 </script>
 
 <script type="text/javascript">
-RED.nodes.registerType("bpm-event in", {
+RED.nodes.registerType("bpm-task-event in", {
     category: "input",
     defaults: {
         account: { type: "bpm-event-credential", required: true },
         topic: { required: true },
         subscription: { required: false },
         ackDeadlineSeconds: { required: false },
-        encoding: { required: false },
+        encoding: { required: false },      
+        binary: { required: true },
         interval: { required: false },
         timeout: { required: false },
+        task: { value: "", required: false },
         name: { value: "", required: false }
     },
     inputs: 0,
     outputs: 1,
     icon: "cloudpubsub.png",
     align: "left",
-    color: "#3FADB5",
+    color: "#66a3ff",
     label: function () {
-        return this.name || this.topic || "bpm event";
+        return this.name || this.topic || "task";
     },
-    paletteLabel: "bpm event"
+    paletteLabel: "task"
 });
 </script>
 
-<script type="text/x-red" data-template-name="bpm-event out">
+<script type="text/x-red" data-template-name="bpm-task-event out">
     <div class="form-row">
         <label for="node-input-account"><i class="fa fa-user"></i> Credentials</label>
         <input type="text" id="node-input-account">
@@ -108,9 +123,9 @@ RED.nodes.registerType("bpm-event in", {
     <div class="form-row">
         <label for="node-input-topic"><i class="fa fa-comment"></i> Event</label>
         <select id="node-input-topic">
-            <option value="TaskComplete">TaskComplete</options>
-            <option value="TaskCancel">TaskCancel</option>
-            <option value="TaskError">TaskError</option>
+            <option value="TaskComplete">Complete</options>
+            <option value="TaskCancel">Cancel</option>
+            <option value="TaskError">Error</option>
         </select>
     </div>
     <!--<div class="form-row">
@@ -118,12 +133,16 @@ RED.nodes.registerType("bpm-event in", {
         <input type="text" id="node-input-topic">
     </div>-->
     <div class="form-row">
+        <label for="node-input-task"><i class="fa fa-tag"></i> Task ID</label>
+        <input type="text" id="node-input-task">
+    </div>
+    <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="bpm-event out">
+<script type="text/x-red" data-help-name="bpm-task-event out">
     <p>Connects to <a href="https://cloud.google.com/pubsub/docs/" target="_blank">Google Cloud Pub/Sub</a> and publishes messages to a specific topic.</p>
     <p>Receives a message with the properties:</p>
     <ul>
@@ -135,21 +154,188 @@ RED.nodes.registerType("bpm-event in", {
 </script>
 
 <script type="text/javascript">
-RED.nodes.registerType("bpm-event out", {
+RED.nodes.registerType("bpm-task-event out", {
     category: "output",
     defaults: {
         account: { type: "bpm-event-credential", required: true },
         topic: { required: true },
+        task: { value: "", required: true },
         name: { value: "", required: false }
     },
     inputs: 1,
     outputs: 0,
     icon: "cloudpubsub.png",
     align: "right",
-    color: "#3FADB5",
+    color: "#66a3ff",
     label: function () {
-        return this.name || this.topic || "bpm event";
+        return this.name || this.topic || "task";
     },
-    paletteLabel: "bpm event"
+    paletteLabel: "task"
+});
+</script>
+
+
+<!--
+    Process Events
+-->
+
+
+<script type="text/x-red" data-template-name="bpm-process-event in">
+    <div class="form-row">
+        <label for="node-input-account"><i class="fa fa-user"></i> Credentials</label>
+        <input type="text" id="node-input-account">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-comment"></i> Event</label>
+        <select id="node-input-topic">
+            <option value="ProcessStarted">Started</option>
+            <option value="ProcessCompleted">Completed</options>
+            <option value="ProcessCanceled">Canceled</options>
+            <option value="ProcessError">Error</options>
+        </select>
+    </div>
+    <!--<div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-comment"></i> Topic</label>
+        <input type="text" id="node-input-topic">
+    </div>-->
+    <!--<div class="form-row">
+        <label for="node-input-subscription"><i class="fa fa-bars"></i> Subscription</label>
+        <input type="text" id="node-input-subscription">
+    </div>-->
+    <!--<div class="form-row">
+        <label for="node-input-ackDeadlineSeconds"><i class="fa fa-hourglass-start"></i> Deadline</label>
+        <input type="number" id="node-input-ackDeadlineSeconds" step="1" placeholder="Maximum time in seconds before redelivery...">
+    </div>
+    <div class="form-row">
+        <label for="node-input-encoding"><i class="fa fa-file-text-o"></i> Encoding</label>
+        <input type="text" id="node-input-encoding" placeholder="Payload encoding...">
+    </div>
+    <div class="form-row">
+        <label for="node-input-binary"><i class="fa fa-file-text-o"></i> String or Binary</label>
+        <select id="node-input-binary" style="width:170px">
+            <option value="binary">binary</option>
+            <option value="string">string</option>
+        </select>
+    </div>        
+    <div class="form-row">
+        <label for="node-input-interval"><i class="fa fa-history"></i> Interval</label>
+        <input type="number" id="node-input-interval" step="1" placeholder="Polling interval in milliseconds...">
+    </div>
+    <div class="form-row">
+        <label for="node-input-timeout"><i class="fa fa-hourglass-start"></i> Timeout</label>
+        <input type="number" id="node-input-timeout" step="1" placeholder="HTTP request timeout in milliseconds...">
+    </div>-->
+    <div class="form-row">
+        <label for="node-input-process"><i class="fa fa-tag"></i> Process ID</label>
+        <input type="text" id="node-input-process">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="bpm-process-event in">
+    <p>Connects to <a href="https://cloud.google.com/pubsub/docs/" target="_blank">Google Cloud Pub/Sub</a> and subscribes to a specific topic.</p>
+    <p>Sends a message with the properties:</p>
+    <ul>
+        <li><code>msg.payload</code></li>
+        <li><code>msg.time</code></li>
+        <li><code>msg.project</code></li>
+        <li><code>msg.topic</code></li>
+        <li><code>msg.subscription</code></li>
+        <li><code>msg.resource</code></li>
+    </ul>
+    <p><code>msg.payload</code> is the data from the Pub/Sub message.</p>
+    <p><code>msg.time</code> is the timestamp from the Pub/Sub message.</p>
+    <p><code>msg.project</code> is the Google Cloud project.</p>
+    <p><code>msg.topic</code> is the topic in the Google Cloud project.</p>
+    <p><code>msg.subscription</code> is the subscription in the Google Cloud project.</p>
+    <p><code>msg.resource</code> is the relative path for the subscription.</p>
+</script>
+
+<script type="text/javascript">
+RED.nodes.registerType("bpm-process-event in", {
+    category: "input",
+    defaults: {
+        account: { type: "bpm-event-credential", required: true },
+        topic: { required: true },
+        subscription: { required: false },
+        ackDeadlineSeconds: { required: false },
+        encoding: { required: false },      
+        binary: { required: true },
+        interval: { required: false },
+        timeout: { required: false },
+        process: { value: "", required: false },
+        name: { value: "", required: false }
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: "cloudpubsub.png",
+    align: "left",
+    color: "#66a3ff",
+    label: function () {
+        return this.name || this.topic || "process";
+    },
+    paletteLabel: "process"
+});
+</script>
+
+<script type="text/x-red" data-template-name="bpm-process-event out">
+    <div class="form-row">
+        <label for="node-input-account"><i class="fa fa-user"></i> Credentials</label>
+        <input type="text" id="node-input-account">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-comment"></i> Event</label>
+        <select id="node-input-topic">
+            <option value="ProcessStart">Start</options>
+            <option value="ProcessCancel">Cancel</option>
+            <option value="ProcessError">Error</option>
+        </select>
+    </div>
+    <!--<div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-comment"></i> Topic</label>
+        <input type="text" id="node-input-topic">
+    </div>-->
+    <div class="form-row">
+        <label for="node-input-process"><i class="fa fa-tag"></i> Process ID</label>
+        <input type="text" id="node-input-process">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="bpm-process-event out">
+    <p>Connects to <a href="https://cloud.google.com/pubsub/docs/" target="_blank">Google Cloud Pub/Sub</a> and publishes messages to a specific topic.</p>
+    <p>Receives a message with the properties:</p>
+    <ul>
+        <li><code>msg.payload</code></li>
+        <li><code>msg.time</code></li>
+    </ul>
+    <p><code>msg.payload</code> is the data for the Pub/Sub message.</p>
+    <p><code>msg.time</code> is the timestamp for the Pub/Sub message.</p>
+</script>
+
+<script type="text/javascript">
+RED.nodes.registerType("bpm-process-event out", {
+    category: "output",
+    defaults: {
+        account: { type: "bpm-event-credential", required: true },
+        topic: { required: true },
+        process: { value: "", required: true },
+        name: { value: "", required: false }
+    },
+    inputs: 1,
+    outputs: 0,
+    icon: "cloudpubsub.png",
+    align: "right",
+    color: "#66a3ff",
+    label: function () {
+        return this.name || this.topic || "process";
+    },
+    paletteLabel: "process"
 });
 </script>
